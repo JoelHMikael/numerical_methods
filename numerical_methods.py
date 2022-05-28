@@ -1,6 +1,5 @@
 
 import unittest
-from typing import Callable
 
 # Finds a zero of f between x1 and x2 with the
 # bisection method. x1 must be on the opposite
@@ -17,14 +16,13 @@ from typing import Callable
 # opposite to x1's.
 # [accuracy]: accurate number of decimals to
 # get. Defaults to infinity, which leads to the
-# most accurate result
-# pythons data types allows.
+# most accurate result pythons data types allows
 def bisection_method(
-    f: Callable,
-    x1: float,
-    x2: float,
-    accuracy: int = float('inf')
-) -> float:
+        f: callable,
+        x1: float,
+        x2: float,
+        accuracy: int = float('inf')
+    ) -> float:
     a = x1
 
     b = x2
@@ -70,6 +68,24 @@ def bisection_method(
 
     return middle
 
+# Gets the difference quotient (an approximation
+# of its derivative) of f using two points at
+# (x + d, f(x + d)) and (x - d, f(x - d)).
+# 
+# f: function whose difference quotient to
+# calculate
+# x: the position at which to calculate the
+# difference quotient
+# d: the distance (along the x-axis) of the
+# points to use in the calculation.
+def difference_quotient(
+        f: callable,
+        x: float,
+        d: float
+    ) -> float:
+    return (f(x + d) - f(x - d)) / (2 * d)
+    
+
 class TestZeroFinders(unittest.TestCase):
     def test_bisection_method(self):
         from math import sin
@@ -80,6 +96,17 @@ class TestZeroFinders(unittest.TestCase):
         )
         with self.assertRaises(ValueError):
             bisection_method(f, 3.0, 3.5)
+
+class TestDifferenceQuotient(unittest.TestCase):
+    def test_difference_quotient(self):
+        f = lambda x: x ** x
+        x = .5
+        d = .1
+
+        res = difference_quotient(f, x, d)
+        res = round(res, 3)
+        
+        self.assertEqual(res, 0.214)
 
 if __name__ == '__main__':
     unittest.main()
